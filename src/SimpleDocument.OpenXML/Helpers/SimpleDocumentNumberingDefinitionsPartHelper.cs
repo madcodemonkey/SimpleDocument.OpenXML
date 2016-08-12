@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Helps with NumberingDefinitionsPart to add NumberingInstance add AbstractNum since there order matters this takes care of that problem.</summary>
     public class SimpleDocumentNumberingDefinitionsPartHelper
     {
         public SimpleDocumentNumberingDefinitionsPartHelper(WordprocessingDocument wpd)

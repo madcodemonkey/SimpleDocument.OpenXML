@@ -35,10 +35,38 @@ namespace WordOpenXMLExample1
             if (File.Exists(fileToCreate))
                 File.Delete(fileToCreate);
 
+            var writer = DoWork();
+
+            writer.SaveToFile(fileToCreate);
+            LogMessage("File created: " + fileToCreate);
+        }
+
+        private void SaveToStream(string fileToCreate)
+        {
+            if (File.Exists(fileToCreate))
+                File.Delete(fileToCreate);
+
+            var writer = DoWork();
+
+            using (FileStream fs = File.Create(fileToCreate))
+            using (MemoryStream ms = writer.SaveToStream())
+            {
+                ms.WriteTo(fs);
+            }
+            
+            LogMessage("File created: " + fileToCreate);
+        }
+
+        private SimpleDocumentWriter DoWork()
+        {
             var writer = new SimpleDocumentWriter();
-            var paragraph = writer.ParagraphHelper.AddToBody("This is a good report!");
-            writer.ParagraphHelper.ApplyStyle(paragraph, SimpleDocumentParagraphStylesEnum.H1);
-            writer.ParagraphHelper.ApplyJustitification(paragraph, JustificationValues.Center);
+            var paragraph1 = writer.ParagraphHelper.AddToBody("This is a good report!");
+            writer.ParagraphHelper.ApplyStyle(paragraph1, SimpleDocumentParagraphStylesEnum.H1);
+            writer.ParagraphHelper.ApplyJustitification(paragraph1, JustificationValues.Center);
+
+            var paragraph2 = writer.ParagraphHelper.AddToBody("The H2");
+            writer.ParagraphHelper.ApplyStyle(paragraph2, SimpleDocumentParagraphStylesEnum.H2);
+            writer.ParagraphHelper.ApplyJustitification(paragraph2, JustificationValues.Left);
 
             List<string> fruitList = new List<string>() {"Apple", "Banana", "Carrot"};
             writer.NumberedListHelper.AddList(fruitList);
@@ -55,49 +83,16 @@ namespace WordOpenXMLExample1
             AddPicture(writer, @"C:\Temp\picture2.png", 2);
             AddPicture(writer, @"C:\Temp\picture3.jpg", 3);
 
-            var addParagraph = writer.ParagraphHelper.AddToBody("Done.");
-            writer.ParagraphHelper.ApplyStyle(addParagraph, SimpleDocumentParagraphStylesEnum.H1);
+            var paragraph3 = writer.ParagraphHelper.AddToBody("Another H1.");
+            writer.ParagraphHelper.ApplyStyle(paragraph3, SimpleDocumentParagraphStylesEnum.H1);
 
+            var paragraph4 = writer.ParagraphHelper.AddToBody("The H2");
+            writer.ParagraphHelper.ApplyStyle(paragraph4, SimpleDocumentParagraphStylesEnum.H2);
+            writer.ParagraphHelper.ApplyJustitification(paragraph4, JustificationValues.Left);
 
-            writer.SaveToFile(fileToCreate);
-            LogMessage("File created: " + fileToCreate);
-        }
-
-        private void SaveToStream(string fileToCreate)
-        {
-            if (File.Exists(fileToCreate))
-                File.Delete(fileToCreate);
-
-            var writer = new SimpleDocumentWriter();
-            var paragraph = writer.ParagraphHelper.AddToBody("This is a good report!");
-            writer.ParagraphHelper.ApplyStyle(paragraph, SimpleDocumentParagraphStylesEnum.H1);
-            writer.ParagraphHelper.ApplyJustitification(paragraph, JustificationValues.Center);
-
-            List<string> fruitList = new List<string>() { "Apple", "Banana", "Carrot" };
-            writer.NumberedListHelper.AddList(fruitList);
-            writer.ParagraphHelper.AddToBody("This is a spacing paragraph 1.");
-
-            List<string> animalList = new List<string>() { "Dog", "Cat", "Bear" };
-            writer.NumberedListHelper.AddList(animalList);
-            writer.ParagraphHelper.AddToBody("This is a spacing paragraph 2.");
-
-            List<string> stuffList = new List<string>() { "Ball", "Wallet", "Phone" };
-            writer.BulletHelper.AddList(stuffList);
-
-            AddPicture(writer, @"C:\Temp\picture1.jpg", 1);
-            AddPicture(writer, @"C:\Temp\picture2.png", 2);
-            AddPicture(writer, @"C:\Temp\picture3.jpg", 3);
-
-            var addParagraph = writer.ParagraphHelper.AddToBody("Done.");
-            writer.ParagraphHelper.ApplyStyle(addParagraph, SimpleDocumentParagraphStylesEnum.H1);
-
-            using(FileStream fs = File.Create(fileToCreate))
-            using (MemoryStream ms = writer.SaveToStream())
-            {
-                ms.WriteTo(fs);
-            }
-            
-            LogMessage("File created: " + fileToCreate);
+            var paragraph5 = writer.ParagraphHelper.AddToBody("Done");
+            writer.ParagraphHelper.ApplyStyle(paragraph5, SimpleDocumentParagraphStylesEnum.H1);
+            return writer;
         }
 
         private void AddPicture(SimpleDocumentWriter writer, string fileNameAndPath, int pictureNumber)

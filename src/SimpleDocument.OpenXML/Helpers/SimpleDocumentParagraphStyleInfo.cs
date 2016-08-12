@@ -1,5 +1,6 @@
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Class for holder paragrath style info</summary>
     internal class SimpleDocumentParagraphStyleInfo
     {
         public SimpleDocumentParagraphStyleInfo()

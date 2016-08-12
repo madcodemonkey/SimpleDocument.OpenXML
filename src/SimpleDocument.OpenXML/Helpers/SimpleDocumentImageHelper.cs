@@ -6,11 +6,22 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Helps add images to a document.</summary>
     public class SimpleDocumentImageHelper : SimpleDocumentHelperBase
     {
         public SimpleDocumentImageHelper(WordprocessingDocument wpd)
         {
             WordprocessingDocument = wpd;
+        }
+
+        /// <summary>Add an image to the body of the document.  This method is used when data is retrieved from a database as a byte array.</summary>
+        /// <param name="fileName">Image as a file</param>
+        public Paragraph AddImage(string fileName)
+        {
+            using (var fs = File.Open(fileName, FileMode.Open))
+            {
+                return AddImage(fs);
+            }
         }
 
         /// <summary>Add an image to the body of the document.  This method is used when data is retrieved from a database as a byte array.</summary>

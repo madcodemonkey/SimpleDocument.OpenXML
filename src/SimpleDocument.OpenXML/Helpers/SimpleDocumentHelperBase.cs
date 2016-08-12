@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Abstract base class for all helpers.</summary>
     public abstract class SimpleDocumentHelperBase
     {
         private SimpleDocumentParagraphHelper _paragraphHelper;
@@ -19,7 +20,7 @@ namespace SimpleDocument.OpenXML
             get { return _paragraphHelper ?? (_paragraphHelper = new SimpleDocumentParagraphHelper(WordprocessingDocument)); }
         }
 
-        public Body TheBody
+        protected Body TheBody
         {
             get
             {

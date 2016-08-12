@@ -6,13 +6,15 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Helps with adding paragraphs and a LOT of things are in paragraphs (text, images, bullet list items, etc.)</summary>
     public class SimpleDocumentParagraphHelper
     {
         public SimpleDocumentParagraphHelper(WordprocessingDocument wpd)
         {
             WordprocessingDocument = wpd;
         }
-        public Body TheBody
+
+        protected Body TheBody
         {
             get
             {
@@ -21,7 +23,8 @@ namespace SimpleDocument.OpenXML
                 return WordprocessingDocument.MainDocumentPart.Document.Body;
             }
         }
-        public WordprocessingDocument WordprocessingDocument { get; set; }
+
+        protected WordprocessingDocument WordprocessingDocument { get; set; }
 
         public Paragraph AddToBody(string sentence)
         {
@@ -140,6 +143,12 @@ namespace SimpleDocument.OpenXML
             return runList;
         }
 
+        private const string NormalStyleId = "Normal";
+        private const string NormalStyleName = "Normal";
+        private const string Heading1StyleId = "Heading1";
+        private const string Heading1StyleName = "heading 1";
+        private const string Heading2StyleId = "Heading2";
+        private const string Heading2StyleName = "heading 2";
 
         /// <summary>Create a new style with the specified styleid and stylename and add it to the specified style definitions part.</summary>
         /// <remarks>
@@ -155,6 +164,9 @@ namespace SimpleDocument.OpenXML
             {
                 case SimpleDocumentParagraphStylesEnum.H1:
                     style = CreateH1Style();
+                    break;
+                case SimpleDocumentParagraphStylesEnum.H2:
+                    style = CreateH2Style();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(styleEnum), styleEnum, null);
@@ -180,25 +192,14 @@ namespace SimpleDocument.OpenXML
 
         private Style CreateH1Style()
         {
-            Style style2 = new Style() { Type = StyleValues.Paragraph, StyleId = "Heading1" };
-            StyleName styleName2 = new StyleName() { Val = "heading 1" };
-            BasedOn basedOn1 = new BasedOn() { Val = "Normal" };
-            NextParagraphStyle nextParagraphStyle1 = new NextParagraphStyle() { Val = "Normal" };
+            Style theStyle = new Style() { Type = StyleValues.Paragraph, StyleId = Heading1StyleId };
+            StyleName styleName2 = new StyleName() { Val = Heading1StyleName };
+            BasedOn basedOn1 = new BasedOn() { Val = NormalStyleName };
+            NextParagraphStyle nextParagraphStyle1 = new NextParagraphStyle() { Val = NormalStyleName };
             LinkedStyle linkedStyle1 = new LinkedStyle() { Val = "Heading1Char" };
             UIPriority uIPriority1 = new UIPriority() { Val = 9 };
             PrimaryStyle primaryStyle2 = new PrimaryStyle();
             Rsid rsid1 = new Rsid() { Val = "00445B57" };
-
-            StyleParagraphProperties styleParagraphProperties1 = new StyleParagraphProperties();
-            KeepNext keepNext1 = new KeepNext();
-            KeepLines keepLines1 = new KeepLines();
-            SpacingBetweenLines spacingBetweenLines2 = new SpacingBetweenLines() { Before = "240", After = "0" };
-            OutlineLevel outlineLevel1 = new OutlineLevel() { Val = 0 };
-
-            styleParagraphProperties1.Append(keepNext1);
-            styleParagraphProperties1.Append(keepLines1);
-            styleParagraphProperties1.Append(spacingBetweenLines2);
-            styleParagraphProperties1.Append(outlineLevel1);
 
             StyleRunProperties styleRunProperties1 = new StyleRunProperties();
             RunFonts runFonts2 = new RunFonts() { AsciiTheme = ThemeFontValues.MajorHighAnsi, HighAnsiTheme = ThemeFontValues.MajorHighAnsi, EastAsiaTheme = ThemeFontValues.MajorEastAsia, ComplexScriptTheme = ThemeFontValues.MajorBidi };
@@ -211,28 +212,61 @@ namespace SimpleDocument.OpenXML
             styleRunProperties1.Append(fontSize2);
             styleRunProperties1.Append(fontSizeComplexScript2);
 
-            style2.Append(styleName2);
-            style2.Append(basedOn1);
-            style2.Append(nextParagraphStyle1);
-            style2.Append(linkedStyle1);
-            style2.Append(uIPriority1);
-            style2.Append(primaryStyle2);
-            style2.Append(rsid1);
-            style2.Append(styleParagraphProperties1);
-            style2.Append(styleRunProperties1);
+            theStyle.Append(styleName2);
+            theStyle.Append(basedOn1);
+            theStyle.Append(nextParagraphStyle1);
+            theStyle.Append(linkedStyle1);
+            theStyle.Append(uIPriority1);
+            theStyle.Append(primaryStyle2);
+            theStyle.Append(rsid1);
+            theStyle.Append(styleRunProperties1);
 
 
-            return style2;
+            return theStyle;
         }
+
+        private Style CreateH2Style()
+        {
+            Style theStyle = new Style() { Type = StyleValues.Paragraph, StyleId = Heading2StyleId };
+            StyleName styleName1 = new StyleName() { Val = Heading2StyleName };
+            BasedOn basedOn1 = new BasedOn() { Val = NormalStyleName };
+            NextParagraphStyle nextParagraphStyle1 = new NextParagraphStyle() { Val = NormalStyleName };
+            LinkedStyle linkedStyle1 = new LinkedStyle() { Val = "Heading2Char" };
+            UIPriority uIPriority1 = new UIPriority() { Val = 9 };
+            Rsid rsid1 = new Rsid() { Val = "00445B57" };
+
+            StyleRunProperties styleRunProperties1 = new StyleRunProperties();
+            RunFonts runFonts1 = new RunFonts() { AsciiTheme = ThemeFontValues.MajorHighAnsi, HighAnsiTheme = ThemeFontValues.MajorHighAnsi, EastAsiaTheme = ThemeFontValues.MajorEastAsia, ComplexScriptTheme = ThemeFontValues.MajorBidi };
+            Color color1 = new Color() { Val = "2E74B5", ThemeColor = ThemeColorValues.Accent1, ThemeShade = "BF" };
+            FontSize fontSize1 = new FontSize() { Val = "26" };
+            FontSizeComplexScript fontSizeComplexScript1 = new FontSizeComplexScript() { Val = "26" };
+
+            styleRunProperties1.Append(runFonts1);
+            styleRunProperties1.Append(color1);
+            styleRunProperties1.Append(fontSize1);
+            styleRunProperties1.Append(fontSizeComplexScript1);
+
+            theStyle.Append(styleName1);
+            theStyle.Append(basedOn1);
+            theStyle.Append(nextParagraphStyle1);
+            theStyle.Append(linkedStyle1);
+            theStyle.Append(uIPriority1);
+            theStyle.Append(rsid1);
+            theStyle.Append(styleRunProperties1);
+            return theStyle;
+        }
+
 
         private SimpleDocumentParagraphStyleInfo GetIntParagraphStyleInfo(SimpleDocumentParagraphStylesEnum style)
         {
             switch (style)
             {
                 case SimpleDocumentParagraphStylesEnum.None:
-                    return new SimpleDocumentParagraphStyleInfo("Normal", "Normal");
+                    return new SimpleDocumentParagraphStyleInfo(NormalStyleId, NormalStyleName);
                 case SimpleDocumentParagraphStylesEnum.H1:
-                    return new SimpleDocumentParagraphStyleInfo("Heading1", "heading 1");
+                    return new SimpleDocumentParagraphStyleInfo(Heading1StyleId, Heading1StyleName);
+                case SimpleDocumentParagraphStylesEnum.H2:
+                    return new SimpleDocumentParagraphStyleInfo(Heading2StyleId, Heading2StyleName);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(style), style, null);
             }

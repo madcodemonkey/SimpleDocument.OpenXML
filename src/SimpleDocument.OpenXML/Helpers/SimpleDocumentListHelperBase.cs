@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SimpleDocument.OpenXML
 {
+    /// <summary>Base class for bullet and numbered list.</summary>
     public abstract class SimpleDocumentListHelperBase : SimpleDocumentHelperBase
     {
         public SimpleDocumentListHelperBase(WordprocessingDocument wpd)
