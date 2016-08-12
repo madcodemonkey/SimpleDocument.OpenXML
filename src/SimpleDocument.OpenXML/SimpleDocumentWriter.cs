@@ -15,12 +15,9 @@ namespace SimpleDocument.OpenXML
 
         public SimpleDocumentWriter()
         {
-            _ms = new MemoryStream();
-            WordprocessingDocument = WordprocessingDocument.Create(_ms, WordprocessingDocumentType.Document);
-            var mainDocumentPart = WordprocessingDocument.AddMainDocumentPart();
-            mainDocumentPart.Document = new Document(new Body());
+            Reset();
         }
-         
+
         public SimpleDocumentBulletListHelper BulletHelper
         {
             get { return _bulletedList ?? (_bulletedList = new SimpleDocumentBulletListHelper(WordprocessingDocument)); }
@@ -35,6 +32,25 @@ namespace SimpleDocument.OpenXML
             get { return _imageHelper ??(_imageHelper = new SimpleDocumentImageHelper(WordprocessingDocument)); }
         }
 
+        public void Reset()
+        {
+            CloseAndDisposeOfDocument();
+
+            if (_ms == null)
+                _ms = new MemoryStream();
+            else _ms.Position = 0;
+
+            // These helpers have a reference to the WordprocessingDocument so null them out!
+            _bulletedList = null;
+            _numberedList = null;
+            _imageHelper = null;
+
+            // Create a new one
+            WordprocessingDocument = WordprocessingDocument.Create(_ms, WordprocessingDocumentType.Document);
+            var mainDocumentPart = WordprocessingDocument.AddMainDocumentPart();
+            mainDocumentPart.Document = new Document(new Body());
+        }
+
         public void Dispose()
         {
             CloseAndDisposeOfDocument();
@@ -47,16 +63,15 @@ namespace SimpleDocument.OpenXML
 
         public MemoryStream SaveToStream()
         {
+            CloseAndDisposeOfDocument();
+
             _ms.Position = 0;
             return _ms;
         }
 
         public void SaveToFile(string fileName)
         {
-            if (WordprocessingDocument != null)
-            {
-                CloseAndDisposeOfDocument();
-            }
+            CloseAndDisposeOfDocument();
 
             if (_ms == null)
                 throw new ArgumentException("This object has already been disposed of so you cannot save it!");
@@ -65,7 +80,6 @@ namespace SimpleDocument.OpenXML
             {
                 _ms.WriteTo(fs);
             }
-
         }
 
         private void CloseAndDisposeOfDocument()
