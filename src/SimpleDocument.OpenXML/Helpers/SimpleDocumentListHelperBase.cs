@@ -17,7 +17,7 @@ namespace SimpleDocument.OpenXML
         /// <param name="sentences">List of strings each of which presents a different entry</param>
         public void AddList(List<string> sentences)
         {
-            var runList = ParagraphHelper.ListOfStringToRunList(sentences);
+            var runList = ParagraphHelper.RunHelper.ConvertToRunList(sentences);
 
             AddList(runList);
         }

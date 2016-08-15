@@ -26,15 +26,33 @@ namespace SimpleDocument.OpenXML
 
         protected WordprocessingDocument WordprocessingDocument { get; set; }
 
+        private SimpleDocumentRunHelper _simpleDocumentRunHelper;
+
+        public SimpleDocumentRunHelper RunHelper
+        {
+            get { return _simpleDocumentRunHelper ?? (_simpleDocumentRunHelper = new SimpleDocumentRunHelper(WordprocessingDocument)); }
+        }
+
+        public Paragraph AddPageBreak()
+        {
+            return AddToBody(new List<Run> {  RunHelper.CreateBreak(BreakValues.Page) });
+        }
+
         public Paragraph AddToBody(string sentence)
         {
-            List<Run> runList = ListOfStringToRunList(new List<string> { sentence });
+            List<Run> runList = RunHelper.ConvertToRunList(new List<string> { sentence });
+            return AddToBody(runList);
+        }
+
+        public Paragraph AddToBody(Run sentence)
+        {
+            var runList = new List<Run> { sentence };
             return AddToBody(runList);
         }
 
         public Paragraph AddToBody(List<string> sentences)
         {
-            List<Run> runList = ListOfStringToRunList(sentences);
+            List<Run> runList = RunHelper.ConvertToRunList(sentences);
             return AddToBody(runList);
         }
 
@@ -130,18 +148,6 @@ namespace SimpleDocument.OpenXML
         }
 
 
-        public List<Run> ListOfStringToRunList(List<string> sentences)
-        {
-            var runList = new List<Run>();
-            foreach (string item in sentences)
-            {
-                var newRun = new Run();
-                newRun.AppendChild(new Text(item));
-                runList.Add(newRun);
-            }
-
-            return runList;
-        }
 
         private const string NormalStyleId = "Normal";
         private const string NormalStyleName = "Normal";

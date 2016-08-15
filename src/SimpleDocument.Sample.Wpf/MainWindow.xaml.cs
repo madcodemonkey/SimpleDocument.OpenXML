@@ -81,6 +81,8 @@ namespace WordOpenXMLExample1
 
             AddPicture(writer, @"C:\Temp\picture1.jpg", 1);
             AddPicture(writer, @"C:\Temp\picture2.png", 2);
+
+            writer.ParagraphHelper.AddPageBreak();
             AddPicture(writer, @"C:\Temp\picture3.jpg", 3);
 
             var paragraph3 = writer.ParagraphHelper.AddToBody("Another H1.");
@@ -89,6 +91,17 @@ namespace WordOpenXMLExample1
             var paragraph4 = writer.ParagraphHelper.AddToBody("The H2");
             writer.ParagraphHelper.ApplyStyle(paragraph4, SimpleDocumentParagraphStylesEnum.H2);
             writer.ParagraphHelper.ApplyJustitification(paragraph4, JustificationValues.Left);
+
+            var text = writer.ParagraphHelper.RunHelper.CreateText("This text is bold and underlined");
+            writer.ParagraphHelper.RunHelper.ApplyBold(text);
+            writer.ParagraphHelper.RunHelper.ApplyUnderline(text, UnderlineValues.Single);
+            writer.ParagraphHelper.AddToBody(text);
+
+
+            writer.ParagraphHelper.AddPageBreak();
+            writer.ParagraphHelper.AddToBody("This should be a the top of a new page");
+            AddPicture(writer, @"C:\Temp\picture4.png", 4);
+            
 
             var paragraph5 = writer.ParagraphHelper.AddToBody("Done");
             writer.ParagraphHelper.ApplyStyle(paragraph5, SimpleDocumentParagraphStylesEnum.H1);
