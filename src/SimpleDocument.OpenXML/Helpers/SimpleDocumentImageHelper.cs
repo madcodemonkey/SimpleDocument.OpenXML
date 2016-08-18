@@ -18,7 +18,7 @@ namespace SimpleDocument.OpenXML
         /// <param name="fileName">Image as a file</param>
         public Paragraph AddImage(string fileName)
         {
-            using (var fs = File.Open(fileName, FileMode.Open))
+            using (var fs = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
                 return AddImage(fs);
             }
